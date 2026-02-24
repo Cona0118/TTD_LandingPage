@@ -1,0 +1,90 @@
+{
+  "intro": {
+    "headline": "ㅌㅌㄷ의\n메인 [[캐치프레이즈]]를 적는 위치 [[Test]]",
+    "description1": "ㅌㅌㄷ 상세 설명 1",
+    "description2": "ㅌㅌㄷ 상세 설명 2"
+  },
+  "slides": [
+    {
+      "id": 1,
+      "label": "로고",
+      "imageUrl": "/images/TTD_logo.png"
+    },
+    {
+      "id": 2,
+      "label": "포스터",
+      "imageUrl": "/images/TTD_poster.png"
+    },
+    {
+      "id": 1771919771339,
+      "label": "gif",
+      "imageUrl": "/images/uploads/1771919788552-b0987cc1.gif",
+      "mediaType": "image"
+    },
+    {
+      "id": 1771919790084,
+      "label": "mp4",
+      "imageUrl": "/images/uploads/1771919799951-04b4fab2.mp4",
+      "mediaType": "video"
+    }
+  ],
+  "schedule": {
+    "vol": "01",
+    "date": "2026-03-21",
+    "location": "경기 안양시 동안구 평촌대로217번길 15 3층",
+    "time": "오전 12시 — 오후 6시"
+  },
+  "prizes": [
+    {
+      "rank": 1,
+      "name": "원피스카드 부스터팩 5탄 -\n신시대의 주역",
+      "count": "1명",
+      "link": "https://smartstore.naver.com/trainers/products/11531821193"
+    },
+    {
+      "rank": 2,
+      "name": "경품 이름 (임시)",
+      "count": "3명"
+    },
+    {
+      "rank": 3,
+      "name": "경품 이름 (임시)",
+      "count": "5명"
+    },
+    {
+      "rank": 4,
+      "name": "경품 이름 (임시)",
+      "count": "9명"
+    },
+    {
+      "rank": 5,
+      "name": "트레이너스 풀아머 카드 케이스 1Box",
+      "count": "1명",
+      "link": "https://smartstore.naver.com/trainers/products/8940456663"
+    },
+    {
+      "rank": 6,
+      "name": "",
+      "count": "1명",
+      "link": "https://smartstore.naver.com/trainers/products/11531821193"
+    }
+  ],
+  "prizeImageUrl": "/images/uploads/1771931815576-61546050.jpg",
+  "maintenanceMode": false,
+  "navbarKakaoUrl": "https://pf.kakao.com/_xlsvsG",
+  "instagramUrl": "https://www.instagram.com/lab.trainers",
+  "boardPaused": false,
+  "seller": {
+    "headline": "오리파 셀러는\n사전 예약 부탁드립니다",
+    "description": "오리파 셀러는 일반 셀러와 구역이 나뉘어져 있습니다.\n오리파 셀러분들은 아래 버튼을 눌러 유의사항을 확인해주세요.",
+    "kakaoUrl": "https://pf.kakao.com/_xlsvsG",
+    "notices": [
+      "오리파 셀러 구역은 일반 셀러 구역과 별도로 운영됩니다.",
+      "오리파 상품은 사전 승인된 상품만 판매 가능합니다.",
+      "부스 설치 및 철거 시간을 반드시 준수해 주세요.",
+      "미성년자에게의 오리파 상품 판매는 엄격히 금지됩니다.",
+      "행사 당일 신분증 지참이 필수입니다.",
+      "기타 문의 사항은 카카오톡 채널을 통해 사전에 문의해 주세요."
+    ]
+  }
+}

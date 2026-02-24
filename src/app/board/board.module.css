@@ -1,0 +1,661 @@
+.main {
+  padding: 140px 48px 120px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.header {
+  margin-bottom: 48px;
+}
+
+.label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+
+.title {
+  font-family: "Outfit", sans-serif;
+  font-size: clamp(28px, 5vw, 40px);
+  font-weight: 700;
+  letter-spacing: -1.5px;
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  font-size: 15px;
+  font-weight: 300;
+  color: var(--muted);
+}
+
+/* Toolbar */
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--divider);
+}
+
+.count {
+  font-size: 13px;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.writeBtn {
+  padding: 8px 24px;
+  background: var(--fg);
+  color: var(--bg);
+  border: none;
+  border-radius: 100px;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: "Noto Sans KR", sans-serif;
+  cursor: pointer;
+  transition: opacity 0.25s;
+}
+
+.writeBtn:hover {
+  opacity: 0.8;
+}
+
+/* Form */
+.formCard {
+  background: var(--card);
+  border-radius: 16px;
+  padding: 28px;
+  margin-bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.input,
+.textarea {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid var(--divider);
+  border-radius: 10px;
+  background: var(--bg);
+  font-size: 14px;
+  font-family: "Noto Sans KR", sans-serif;
+  color: var(--fg);
+  outline: none;
+  transition: border-color 0.25s;
+}
+
+.input:focus,
+.textarea:focus {
+  border-color: var(--accent);
+}
+
+.textarea {
+  resize: vertical;
+  line-height: 1.7;
+}
+
+.submitBtn {
+  align-self: flex-end;
+  padding: 10px 28px;
+  background: var(--accent);
+  color: var(--white);
+  border: none;
+  border-radius: 100px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: "Noto Sans KR", sans-serif;
+  cursor: pointer;
+  transition: all 0.25s;
+}
+
+.submitBtn:hover {
+  opacity: 0.85;
+  transform: translateY(-1px);
+}
+
+/* Post list */
+.list {
+  display: flex;
+  flex-direction: column;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 40px 1fr 80px 100px;
+  gap: 16px;
+  align-items: center;
+  padding: 16px 8px;
+  border-bottom: 1px solid var(--divider);
+  transition: background 0.2s;
+  cursor: pointer;
+}
+
+.row:hover {
+  background: var(--card);
+}
+
+.rowNum {
+  font-family: "Outfit", sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+  text-align: center;
+}
+
+.rowTitle {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--fg);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rowAuthor {
+  font-size: 13px;
+  color: var(--muted);
+  text-align: center;
+}
+
+.rowDate {
+  font-family: "Outfit", sans-serif;
+  font-size: 12px;
+  color: var(--muted);
+  text-align: right;
+}
+
+/* Pagination */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  margin-top: 32px;
+}
+
+.pageBtn {
+  min-width: 36px;
+  height: 36px;
+  padding: 0 10px;
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid var(--divider);
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: "Outfit", sans-serif;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.pageBtn:hover:not(:disabled) {
+  border-color: var(--fg);
+  color: var(--fg);
+}
+
+.pageBtn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.pageBtnActive {
+  background: var(--fg);
+  color: var(--bg);
+  border-color: var(--fg);
+}
+
+/* Empty / loading state */
+.empty {
+  text-align: center;
+  color: var(--muted);
+  padding: 64px 0;
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+/* Comment badge on post title */
+.commentBadge {
+  margin-left: 6px;
+  font-size: 12px;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* Form layout helpers */
+.formRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.formActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.cancelBtn {
+  padding: 10px 24px;
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid var(--divider);
+  border-radius: 100px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: "Noto Sans KR", sans-serif;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.cancelBtn:hover {
+  border-color: var(--fg);
+  color: var(--fg);
+}
+
+.errorMsg {
+  font-size: 13px;
+  color: #e63946;
+  margin: 0;
+}
+
+/* Back button */
+.backBtn {
+  display: inline-block;
+  margin-bottom: 28px;
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 500;
+  font-family: "Noto Sans KR", sans-serif;
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.2s;
+}
+
+.backBtn:hover {
+  color: var(--fg);
+}
+
+/* Post card */
+.postCard {
+  background: var(--card);
+  border-radius: 16px;
+  padding: 36px;
+  margin-bottom: 40px;
+}
+
+.postTitle {
+  font-size: clamp(18px, 3vw, 24px);
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  margin-bottom: 12px;
+  line-height: 1.4;
+}
+
+.postMeta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 28px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--divider);
+}
+
+.metaDot {
+  opacity: 0.4;
+}
+
+.editedLabel {
+  font-size: 11px;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.postContent {
+  font-size: 15px;
+  line-height: 1.9;
+  color: var(--fg);
+  white-space: pre-wrap;
+  word-break: break-word;
+  margin-bottom: 32px;
+}
+
+.postActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding-top: 20px;
+  border-top: 1px solid var(--divider);
+}
+
+.actionBtn {
+  padding: 7px 18px;
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid var(--divider);
+  border-radius: 100px;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: "Noto Sans KR", sans-serif;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.actionBtn:hover {
+  border-color: var(--fg);
+  color: var(--fg);
+}
+
+.deleteBtn:hover {
+  border-color: #e63946;
+  color: #e63946;
+}
+
+/* Comments */
+.commentSection {
+  margin-bottom: 60px;
+}
+
+.commentTitle {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  letter-spacing: -0.3px;
+}
+
+.commentList {
+  margin-bottom: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.commentItem {
+  padding: 16px 0;
+  border-bottom: 1px solid var(--divider);
+}
+
+.replyItem {
+  padding-left: 28px;
+  border-left: 2px solid var(--divider);
+  margin-left: 16px;
+}
+
+.commentMeta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.commentAuthor {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--fg);
+}
+
+.commentDate {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.commentContent {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--fg);
+  white-space: pre-wrap;
+  word-break: break-word;
+  margin: 0;
+}
+
+/* Comment action buttons (reply, edit, delete) */
+.commentActions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.commentActionBtn {
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 500;
+  font-family: "Noto Sans KR", sans-serif;
+  cursor: pointer;
+  padding: 2px 0;
+  transition: color 0.2s;
+}
+
+.commentActionBtn:hover {
+  color: var(--fg);
+}
+
+.commentDeleteBtn:hover {
+  color: #e63946;
+}
+
+/* Comment edit form */
+.editForm {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.editFormActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.editFormActions .cancelBtn {
+  padding: 7px 16px;
+  font-size: 13px;
+}
+
+.editFormActions .submitBtn {
+  padding: 7px 16px;
+  font-size: 13px;
+}
+
+/* Comment delete inline form */
+.deleteForm {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 10px;
+  padding: 12px;
+  background: var(--card);
+  border-radius: 10px;
+}
+
+.deleteWarning {
+  font-size: 13px;
+  color: #e63946;
+  margin: 0;
+  font-weight: 500;
+}
+
+/* Reply form */
+.replyForm {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 12px;
+  padding: 16px;
+  padding-left: 28px;
+  background: var(--card);
+  border-radius: 12px;
+  border-left: 2px solid var(--accent);
+}
+
+/* Main comment form */
+.commentForm {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: var(--card);
+  border-radius: 16px;
+  padding: 24px;
+}
+
+.commentInputRow {
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
+}
+
+.commentInputRow .textarea {
+  flex: 1;
+}
+
+.commentInputRow .submitBtn {
+  flex-shrink: 0;
+  padding: 10px 20px;
+}
+
+/* Password modal */
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 24px;
+}
+
+.modal {
+  background: var(--bg);
+  border-radius: 20px;
+  padding: 32px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.modalTitle {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  letter-spacing: -0.5px;
+}
+
+.modalDesc {
+  font-size: 14px;
+  color: var(--muted);
+  margin-bottom: 20px;
+  line-height: 1.6;
+}
+
+.modalActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.deleteBtnFull {
+  background: #e63946 !important;
+}
+
+/* Image upload */
+.imageUploadRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.imageUploadBtn {
+  padding: 8px 18px;
+  background: transparent;
+  color: var(--fg);
+  border: 1px solid var(--divider);
+  border-radius: 100px;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: "Noto Sans KR", sans-serif;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.imageUploadBtn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.imageUploadBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.imageUploadHint {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* Post content images */
+.postImage {
+  display: block;
+  max-width: 100%;
+  border-radius: 10px;
+  margin: 12px 0;
+}
+
+@media (max-width: 768px) {
+  .main {
+    padding: 120px 24px 80px;
+  }
+  .row {
+    grid-template-columns: 32px 1fr 60px;
+    gap: 8px;
+  }
+  .rowDate {
+    display: none;
+  }
+  .formRow {
+    grid-template-columns: 1fr;
+  }
+  .postCard {
+    padding: 24px;
+  }
+  .commentInputRow {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .commentInputRow .submitBtn {
+    align-self: flex-end;
+  }
+  .replyItem {
+    padding-left: 16px;
+    margin-left: 8px;
+  }
+}
+
+/* ═══════════════════════════════════
+   일시 중지 안내
+═══════════════════════════════════ */
+.pausedNotice {
+  text-align: center;
+  background: #1a1a1e;
+  border: 1px solid #2e2e35;
+  border-radius: 12px;
+  padding: 32px 24px;
+}
+
+.pausedNotice p {
+  color: #7a7680;
+  font-size: 14px;
+  margin: 0 0 16px;
+}
