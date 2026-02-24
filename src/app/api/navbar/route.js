@@ -1,15 +1,11 @@
-import fs from "fs";
-import path from "path";
-
-const CONTENT_PATH = path.join(process.cwd(), "src", "data", "content.json");
+import { getContent } from "@/lib/getContent";
 
 export async function GET() {
   try {
-    const raw = fs.readFileSync(CONTENT_PATH, "utf-8");
-    const data = JSON.parse(raw);
+    const data = await getContent();
     return Response.json({
-      kakaoUrl: data.navbarKakaoUrl || "",
-      instagramUrl: data.instagramUrl || "",
+      kakaoUrl: data?.navbarKakaoUrl || "",
+      instagramUrl: data?.instagramUrl || "",
     });
   } catch {
     return Response.json({ kakaoUrl: "", instagramUrl: "" });

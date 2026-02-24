@@ -1,6 +1,5 @@
-import fs from "fs";
-import path from "path";
 import { redirect } from "next/navigation";
+import { getContent } from "@/lib/getContent";
 import Navbar from "@/components/Navbar";
 import ImageSlider from "@/components/ImageSlider";
 import IntroSection from "@/components/IntroSection";
@@ -11,18 +10,8 @@ import Footer from "@/components/Footer";
 
 export const dynamic = "force-dynamic";
 
-function getContent() {
-  try {
-    const filePath = path.join(process.cwd(), "src", "data", "content.json");
-    const raw = fs.readFileSync(filePath, "utf-8");
-    return JSON.parse(raw);
-  } catch {
-    return null;
-  }
-}
-
-export default function Home() {
-  const content = getContent();
+export default async function Home() {
+  const content = await getContent();
   if (content?.maintenanceMode) redirect("/maintenance");
 
   return (

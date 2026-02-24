@@ -1,10 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import crypto from "crypto";
-import fs from "fs";
-import path from "path";
-
-const CONTENT_PATH = path.join(process.cwd(), "src", "data", "content.json");
+import { getContent } from "@/lib/getContent";
 
 function getSupabase() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -15,15 +12,6 @@ function getSupabase() {
 
 function hashPassword(password) {
   return crypto.createHash("sha256").update(password).digest("hex");
-}
-
-function isBoardPaused() {
-  try {
-    const raw = fs.readFileSync(CONTENT_PATH, "utf-8");
-    return !!JSON.parse(raw).boardPaused;
-  } catch {
-    return false;
-  }
 }
 
 export async function GET() {
@@ -58,7 +46,8 @@ export async function GET() {
 }
 
 export async function POST(request) {
-  if (isBoardPaused()) {
+  const siteContent = await getContent();
+  if (siteContent?.boardPaused) {
     return NextResponse.json({ error: "현재 게시판 작성이 일시 중지되었습니다." }, { status: 403 });
   }
 

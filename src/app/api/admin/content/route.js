@@ -1,12 +1,17 @@
 import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 import crypto from "crypto";
-import fs from "fs";
-import path from "path";
+import { createClient } from "@supabase/supabase-js";
 
 const SESSION_SECRET = process.env.ADMIN_SESSION_SECRET || "ttd-secret-key-change-in-production";
 const COOKIE_NAME = "ttd_admin_session";
-const CONTENT_PATH = path.join(process.cwd(), "src", "data", "content.json");
+
+function getSupabaseAdmin() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!url || !serviceKey) return null;
+  return createClient(url, serviceKey);
+}
 
 async function isAuthenticated() {
   const cookieStore = await cookies();
@@ -24,9 +29,20 @@ export async function GET() {
     return Response.json({ success: false, message: "인증이 필요합니다." }, { status: 401 });
   }
 
+  const supabase = getSupabaseAdmin();
+  if (!supabase) {
+    return Response.json({ success: false, message: "Supabase가 설정되지 않았습니다." }, { status: 500 });
+  }
+
   try {
-    const raw = fs.readFileSync(CONTENT_PATH, "utf-8");
-    return Response.json({ success: true, data: JSON.parse(raw) });
+    const { data, error } = await supabase
+      .from("site_content")
+      .select("data")
+      .eq("id", 1)
+      .single();
+
+    if (error) throw error;
+    return Response.json({ success: true, data: data.data });
   } catch {
     return Response.json(
       { success: false, message: "콘텐츠를 불러올 수 없습니다." },
@@ -41,9 +57,18 @@ export async function PUT(request) {
     return Response.json({ success: false, message: "인증이 필요합니다." }, { status: 401 });
   }
 
+  const supabase = getSupabaseAdmin();
+  if (!supabase) {
+    return Response.json({ success: false, message: "Supabase가 설정되지 않았습니다." }, { status: 500 });
+  }
+
   try {
     const body = await request.json();
-    fs.writeFileSync(CONTENT_PATH, JSON.stringify(body, null, 2), "utf-8");
+    const { error } = await supabase
+      .from("site_content")
+      .upsert({ id: 1, data: body, updated_at: new Date().toISOString() });
+
+    if (error) throw error;
     revalidatePath("/");
     return Response.json({ success: true });
   } catch {
