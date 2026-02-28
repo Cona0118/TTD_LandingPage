@@ -4,15 +4,13 @@ import { useEffect, useState } from "react";
 import styles from "./Footer.module.css";
 
 export default function Footer() {
-  const [kakaoUrl, setKakaoUrl] = useState("");
-  const [instagramUrl, setInstagramUrl] = useState("");
+  const [footerLinks, setFooterLinks] = useState([]);
 
   useEffect(() => {
     fetch("/api/navbar")
       .then((r) => r.json())
       .then((d) => {
-        if (d.kakaoUrl) setKakaoUrl(d.kakaoUrl);
-        if (d.instagramUrl) setInstagramUrl(d.instagramUrl);
+        if (d.footerLinks) setFooterLinks(d.footerLinks);
       })
       .catch(() => {});
   }, []);
@@ -23,18 +21,20 @@ export default function Footer() {
         ㅌㅌㄷ<span>.</span>
       </div>
       <div className={styles.text}>© 2026 ㅌㅌㄷ. All rights reserved.</div>
-      <div className={styles.links}>
-        {instagramUrl && (
-          <a href={instagramUrl} target="_blank" rel="noopener noreferrer">
-            Instagram
-          </a>
-        )}
-        {kakaoUrl && (
-          <a href={kakaoUrl} target="_blank" rel="noopener noreferrer">
-            카카오톡 채널
-          </a>
-        )}
-      </div>
+      {footerLinks.length > 0 && (
+        <div className={styles.links}>
+          {footerLinks.map((link) => (
+            <a
+              key={link.id}
+              href={link.url}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {link.name}
+            </a>
+          ))}
+        </div>
+      )}
     </footer>
   );
 }

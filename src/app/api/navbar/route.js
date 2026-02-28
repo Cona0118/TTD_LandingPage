@@ -5,9 +5,9 @@ export async function GET() {
     const data = await getContent();
     return Response.json({
       kakaoUrl: data?.navbarKakaoUrl || "",
-      instagramUrl: data?.instagramUrl || "",
+      footerLinks: data?.footerLinks || [],
     });
   } catch {
-    return Response.json({ kakaoUrl: "", instagramUrl: "" });
+    return Response.json({ kakaoUrl: "", footerLinks: [] });
   }
 }

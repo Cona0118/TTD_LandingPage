@@ -11,9 +11,16 @@ function parseHeadlinePreview(text) {
   parts.forEach((part, i) => {
     if (part.startsWith("[[") && part.endsWith("]]")) {
       result.push(
-        <em key={i} style={{ color: "#e8533e", fontStyle: "normal", fontWeight: "inherit" }}>
+        <em
+          key={i}
+          style={{
+            color: "#e8533e",
+            fontStyle: "normal",
+            fontWeight: "inherit",
+          }}
+        >
           {part.slice(2, -2)}
-        </em>
+        </em>,
       );
     } else {
       part.split("\n").forEach((line, j) => {
@@ -26,8 +33,29 @@ function parseHeadlinePreview(text) {
 }
 
 /* ── 날짜 문자열 → 표시용 값 변환 ── */
-const MONTHS_EN = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-const DAYS_EN = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+const MONTHS_EN = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];
+const DAYS_EN = [
+  "Sunday",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+];
 
 function dateToDisplay(dateStr) {
   if (!dateStr) return null;
@@ -45,12 +73,15 @@ function getNextThirdSaturday() {
   const now = new Date();
   let year = now.getFullYear();
   let month = now.getMonth() + 1; // 다음 달
-  if (month > 11) { month = 0; year++; }
+  if (month > 11) {
+    month = 0;
+    year++;
+  }
   // 해당 월 1일의 요일
   const first = new Date(year, month, 1);
   const firstDay = first.getDay(); // 0=일 ~ 6=토
   // 첫 번째 토요일 날짜
-  const firstSat = firstDay <= 6 ? (6 - firstDay + 1) : 1;
+  const firstSat = firstDay <= 6 ? 6 - firstDay + 1 : 1;
   // 세 번째 토요일 = 첫 번째 토요일 + 14
   const thirdSat = firstSat + 14;
   const d = new Date(year, month, thirdSat);
@@ -91,7 +122,10 @@ export default function AdminPage() {
   useEffect(() => {
     fetch("/api/admin/auth")
       .then((r) => r.json())
-      .then((d) => { setAuth(d.authenticated); setChecking(false); })
+      .then((d) => {
+        setAuth(d.authenticated);
+        setChecking(false);
+      })
       .catch(() => setChecking(false));
   }, []);
 
@@ -99,10 +133,14 @@ export default function AdminPage() {
   const loadContent = useCallback(() => {
     fetch("/api/admin/content")
       .then((r) => r.json())
-      .then((d) => { if (d.success) setContent(d.data); });
+      .then((d) => {
+        if (d.success) setContent(d.data);
+      });
   }, []);
 
-  useEffect(() => { if (auth) loadContent(); }, [auth, loadContent]);
+  useEffect(() => {
+    if (auth) loadContent();
+  }, [auth, loadContent]);
 
   /* ── 지난 날짜 자동 갱신 (다음 달 세 번째 토요일) ── */
   useEffect(() => {
@@ -110,7 +148,15 @@ export default function AdminPage() {
     const today = getTodayStr();
     if (content.schedule.date < today) {
       const next = getNextThirdSaturday();
-      updateField("schedule", "date", next);
+      const currentVol = String(content.schedule.vol ?? "");
+      const numMatch = currentVol.match(/\d+/);
+      const nextVol = numMatch
+        ? currentVol.replace(/\d+/, String(Number(numMatch[0]) + 1))
+        : currentVol;
+      setContent((prev) => ({
+        ...prev,
+        schedule: { ...prev.schedule, date: next, vol: nextVol },
+      }));
     }
   }, [content?.schedule?.date]);
 
@@ -124,8 +170,10 @@ export default function AdminPage() {
       body: JSON.stringify({ password }),
     });
     const data = await res.json();
-    if (data.success) { setAuth(true); setPassword(""); }
-    else setError(data.message);
+    if (data.success) {
+      setAuth(true);
+      setPassword("");
+    } else setError(data.message);
   }
 
   /* ── 로그아웃 ── */
@@ -145,7 +193,7 @@ export default function AdminPage() {
     });
     const data = await res.json();
     setSaving(false);
-    showToast(data.success ? "저장되었습니다!" : (data.message || "저장 실패"));
+    showToast(data.success ? "저장되었습니다!" : data.message || "저장 실패");
   }
 
   function showToast(msg) {
@@ -155,7 +203,10 @@ export default function AdminPage() {
 
   /* ── 필드 업데이트 헬퍼 ── */
   function updateField(section, key, value) {
-    setContent((prev) => ({ ...prev, [section]: { ...prev[section], [key]: value } }));
+    setContent((prev) => ({
+      ...prev,
+      [section]: { ...prev[section], [key]: value },
+    }));
   }
 
   function updateSlide(index, key, value) {
@@ -169,7 +220,10 @@ export default function AdminPage() {
   function addSlide() {
     setContent((prev) => ({
       ...prev,
-      slides: [...prev.slides, { id: Date.now(), label: "", imageUrl: "", mediaType: "image" }],
+      slides: [
+        ...prev.slides,
+        { id: Date.now(), label: "", imageUrl: "", mediaType: "image" },
+      ],
     }));
   }
 
@@ -192,7 +246,10 @@ export default function AdminPage() {
   function addPrize() {
     setContent((prev) => ({
       ...prev,
-      prizes: [...prev.prizes, { rank: prev.prizes.length + 1, name: "", count: "1명" }],
+      prizes: [
+        ...prev.prizes,
+        { rank: prev.prizes.length + 1, name: "", count: "1명" },
+      ],
     }));
   }
 
@@ -227,6 +284,31 @@ export default function AdminPage() {
       const notices = [...(prev.seller.notices || [])];
       notices[index] = value;
       return { ...prev, seller: { ...prev.seller, notices } };
+    });
+  }
+
+  function addFooterLink() {
+    setContent((prev) => ({
+      ...prev,
+      footerLinks: [
+        ...(prev.footerLinks || []),
+        { id: Date.now(), name: "", url: "" },
+      ],
+    }));
+  }
+
+  function removeFooterLink(index) {
+    setContent((prev) => ({
+      ...prev,
+      footerLinks: (prev.footerLinks || []).filter((_, i) => i !== index),
+    }));
+  }
+
+  function updateFooterLink(index, key, value) {
+    setContent((prev) => {
+      const footerLinks = [...(prev.footerLinks || [])];
+      footerLinks[index] = { ...footerLinks[index], [key]: value };
+      return { ...prev, footerLinks };
     });
   }
 
@@ -271,14 +353,16 @@ export default function AdminPage() {
     });
     const d = await res.json();
     if (d.success) {
-      showToast(!currentHidden ? "숨김 처리되었습니다." : "숨김 해제되었습니다.");
+      showToast(
+        !currentHidden ? "숨김 처리되었습니다." : "숨김 해제되었습니다.",
+      );
       if (type === "post") {
         setBoardPosts((prev) =>
-          prev.map((p) => (p.id === id ? { ...p, hidden: !currentHidden } : p))
+          prev.map((p) => (p.id === id ? { ...p, hidden: !currentHidden } : p)),
         );
       } else {
         setPostComments((prev) =>
-          prev.map((c) => (c.id === id ? { ...c, hidden: !currentHidden } : c))
+          prev.map((c) => (c.id === id ? { ...c, hidden: !currentHidden } : c)),
         );
       }
     } else {
@@ -309,42 +393,51 @@ export default function AdminPage() {
   }
 
   /* ── 로딩 ── */
-  if (checking) return (
-    <div className={styles.loginWrap}>
-      <div className={styles.loginCard}>
-        <p style={{ color: "#7a7680", textAlign: "center" }}>확인 중...</p>
+  if (checking)
+    return (
+      <div className={styles.loginWrap}>
+        <div className={styles.loginCard}>
+          <p style={{ color: "#7a7680", textAlign: "center" }}>확인 중...</p>
+        </div>
       </div>
-    </div>
-  );
+    );
 
   /* ── 로그인 화면 ── */
-  if (!auth) return (
-    <div className={styles.loginWrap}>
-      <form className={styles.loginCard} onSubmit={handleLogin}>
-        <div className={styles.loginLogo}>ㅌㅌㄷ<span>.</span></div>
-        <p className={styles.loginLabel}>관리자 로그인</p>
-        <input
-          type="password"
-          className={styles.loginInput}
-          placeholder="비밀번호를 입력하세요"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          autoFocus
-        />
-        {error && <p className={styles.loginError}>{error}</p>}
-        <button type="submit" className={styles.loginBtn}>로그인</button>
-      </form>
-    </div>
-  );
+  if (!auth)
+    return (
+      <div className={styles.loginWrap}>
+        <form className={styles.loginCard} onSubmit={handleLogin}>
+          <div className={styles.loginLogo}>
+            ㅌㅌㄷ<span>.</span>
+          </div>
+          <p className={styles.loginLabel}>관리자 로그인</p>
+          <input
+            type="password"
+            className={styles.loginInput}
+            placeholder="비밀번호를 입력하세요"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            autoFocus
+          />
+          {error && <p className={styles.loginError}>{error}</p>}
+          <button type="submit" className={styles.loginBtn}>
+            로그인
+          </button>
+        </form>
+      </div>
+    );
 
   /* ── 콘텐츠 로딩 ── */
-  if (!content) return (
-    <div className={styles.loginWrap}>
-      <div className={styles.loginCard}>
-        <p style={{ color: "#7a7680", textAlign: "center" }}>불러오는 중...</p>
+  if (!content)
+    return (
+      <div className={styles.loginWrap}>
+        <div className={styles.loginCard}>
+          <p style={{ color: "#7a7680", textAlign: "center" }}>
+            불러오는 중...
+          </p>
+        </div>
       </div>
-    </div>
-  );
+    );
 
   const tabs = [
     { key: "intro", label: "소개" },
@@ -363,7 +456,9 @@ export default function AdminPage() {
 
       {/* ── 사이드바 ── */}
       <aside className={styles.sidebar}>
-        <div className={styles.sidebarLogo}>ㅌㅌㄷ<span>.</span></div>
+        <div className={styles.sidebarLogo}>
+          ㅌㅌㄷ<span>.</span>
+        </div>
         <p className={styles.sidebarLabel}>Admin</p>
         <nav className={styles.sidebarNav}>
           {tabs.map((t) => (
@@ -377,10 +472,16 @@ export default function AdminPage() {
           ))}
         </nav>
         <div className={styles.sidebarBottom}>
-          <button className={styles.saveBtn} onClick={handleSave} disabled={saving}>
+          <button
+            className={styles.saveBtn}
+            onClick={handleSave}
+            disabled={saving}
+          >
             {saving ? "저장 중..." : "💾 변경사항 저장"}
           </button>
-          <button className={styles.logoutBtn} onClick={handleLogout}>로그아웃</button>
+          <button className={styles.logoutBtn} onClick={handleLogout}>
+            로그아웃
+          </button>
         </div>
       </aside>
 
@@ -388,8 +489,13 @@ export default function AdminPage() {
       <main className={styles.main}>
         <div className={styles.mainHeader}>
           <h1>{tabs.find((t) => t.key === activeTab)?.label} 관리</h1>
-          <a href="/" target="_blank" rel="noopener noreferrer" className={styles.previewLink}>
-            사이트 미리보기 ↗
+          <a
+            href="/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={styles.previewLink}
+          >
+            사이트로 이동 ↗
           </a>
         </div>
 
@@ -397,23 +503,47 @@ export default function AdminPage() {
         {activeTab === "intro" && (
           <div className={styles.section}>
             {/* 사이트 점검 모드 토글 */}
-            <div className={styles.boardToggleRow} style={{ background: content.maintenanceMode ? "rgba(232,83,62,0.08)" : undefined, borderRadius: 10, padding: "16px 20px", marginBottom: 8 }}>
+            <div
+              className={styles.boardToggleRow}
+              style={{
+                background: content.maintenanceMode
+                  ? "rgba(232,83,62,0.08)"
+                  : undefined,
+                borderRadius: 10,
+                padding: "16px 20px",
+                marginBottom: 8,
+              }}
+            >
               <div>
                 <div className={styles.boardToggleLabel}>사이트 점검 모드</div>
                 <div className={styles.boardToggleDesc}>
-                  활성화하면 메인 페이지와 게시판이 점검 중 화면으로 전환됩니다. (관리자 페이지는 유지)
+                  활성화하면 메인 페이지와 게시판이 점검 중 화면으로 전환됩니다.
+                  (관리자 페이지는 유지)
                 </div>
               </div>
               <button
                 className={`${styles.toggle} ${content.maintenanceMode ? styles.toggleOn : ""}`}
-                onClick={() => setContent((prev) => ({ ...prev, maintenanceMode: !prev.maintenanceMode }))}
+                onClick={() =>
+                  setContent((prev) => ({
+                    ...prev,
+                    maintenanceMode: !prev.maintenanceMode,
+                  }))
+                }
               >
                 <span className={styles.toggleKnob} />
               </button>
             </div>
             {content.maintenanceMode && (
-              <p className={styles.boardPausedBadge} style={{ background: "rgba(232,83,62,0.12)", color: "#e8533e", borderColor: "rgba(232,83,62,0.25)" }}>
-                현재 점검 모드가 활성화된 상태입니다. 변경사항 저장 버튼을 눌러야 적용됩니다.
+              <p
+                className={styles.boardPausedBadge}
+                style={{
+                  background: "rgba(232,83,62,0.12)",
+                  color: "#e8533e",
+                  borderColor: "rgba(232,83,62,0.25)",
+                }}
+              >
+                현재 점검 모드가 활성화된 상태입니다. 변경사항 저장 버튼을
+                눌러야 적용됩니다.
               </p>
             )}
 
@@ -424,11 +554,14 @@ export default function AdminPage() {
               <textarea
                 rows={3}
                 value={content.intro.headline}
-                onChange={(e) => updateField("intro", "headline", e.target.value)}
+                onChange={(e) =>
+                  updateField("intro", "headline", e.target.value)
+                }
               />
               <span className={styles.hint}>
                 줄바꿈(Enter)과{" "}
-                <code className={styles.code}>{"[[빨간색 단어]]"}</code> 마크업 사용 가능
+                <code className={styles.code}>{"[[빨간색 단어]]"}</code> 마크업
+                사용 가능
               </span>
               {content.intro.headline && (
                 <div className={styles.headlinePreview}>
@@ -441,7 +574,9 @@ export default function AdminPage() {
               <textarea
                 rows={3}
                 value={content.intro.description1}
-                onChange={(e) => updateField("intro", "description1", e.target.value)}
+                onChange={(e) =>
+                  updateField("intro", "description1", e.target.value)
+                }
               />
             </div>
             <div className={styles.field}>
@@ -449,7 +584,9 @@ export default function AdminPage() {
               <textarea
                 rows={3}
                 value={content.intro.description2}
-                onChange={(e) => updateField("intro", "description2", e.target.value)}
+                onChange={(e) =>
+                  updateField("intro", "description2", e.target.value)
+                }
               />
             </div>
 
@@ -461,24 +598,63 @@ export default function AdminPage() {
                 type="text"
                 placeholder="https://pf.kakao.com/..."
                 value={content.navbarKakaoUrl ?? ""}
-                onChange={(e) => setContent((prev) => ({ ...prev, navbarKakaoUrl: e.target.value }))}
+                onChange={(e) =>
+                  setContent((prev) => ({
+                    ...prev,
+                    navbarKakaoUrl: e.target.value,
+                  }))
+                }
               />
               <span className={styles.hint}>
-                헤더 &apos;카카오톡 문의&apos; 버튼 및 푸터 &apos;카카오톡 채널&apos; 링크에 공통 적용.
-                비워두면 버튼이 표시되지 않습니다.
+                헤더 &apos;카카오톡 문의&apos; 버튼 및 푸터 &apos;카카오톡
+                채널&apos; 링크에 공통 적용. 비워두면 버튼이 표시되지 않습니다.
               </span>
             </div>
-            <div className={styles.field}>
-              <label>Instagram URL</label>
-              <input
-                type="text"
-                placeholder="https://www.instagram.com/..."
-                value={content.instagramUrl ?? ""}
-                onChange={(e) => setContent((prev) => ({ ...prev, instagramUrl: e.target.value }))}
-              />
-              <span className={styles.hint}>
-                푸터 &apos;Instagram&apos; 링크에 적용됩니다. 비워두면 링크가 표시되지 않습니다.
-              </span>
+            <div className={styles.divider} />
+
+            <div className={styles.noticeSection}>
+              <div className={styles.noticeSectionHeader}>
+                <span className={styles.noticeTitle}>푸터 링크 관리</span>
+                <button className={styles.addBtn} onClick={addFooterLink}>
+                  + 링크 추가
+                </button>
+              </div>
+              <p className={styles.sectionDesc} style={{ marginBottom: 12 }}>
+                푸터에 표시될 링크 목록입니다. 표시 이름과 URL을 입력하세요.
+                (예: Instagram, YouTube, X 등)
+              </p>
+              {(content.footerLinks || []).length === 0 && (
+                <p style={{ color: "#7a7680", fontSize: 14 }}>
+                  추가된 링크가 없습니다.
+                </p>
+              )}
+              {(content.footerLinks || []).map((link, i) => (
+                <div key={link.id} className={styles.noticeRow}>
+                  <span className={styles.noticeNum}>{i + 1}</span>
+                  <input
+                    type="text"
+                    className={styles.noticeInput}
+                    style={{ width: 130, flexShrink: 0 }}
+                    value={link.name}
+                    onChange={(e) => updateFooterLink(i, "name", e.target.value)}
+                    placeholder="표시 이름 (예: Instagram)"
+                  />
+                  <input
+                    type="text"
+                    className={styles.noticeInput}
+                    value={link.url}
+                    onChange={(e) => updateFooterLink(i, "url", e.target.value)}
+                    placeholder="URL (https://...)"
+                  />
+                  <button
+                    className={styles.deleteBtn}
+                    onClick={() => removeFooterLink(i)}
+                    title="삭제"
+                  >
+                    ✕
+                  </button>
+                </div>
+              ))}
             </div>
           </div>
         )}
@@ -487,8 +663,9 @@ export default function AdminPage() {
         {activeTab === "slides" && (
           <div className={styles.section}>
             <p className={styles.sectionDesc}>
-              슬라이더에 표시될 이미지·영상을 URL 입력 또는 파일 업로드로 설정하세요.
-              이미지(JPG, PNG, GIF, WEBP) 및 영상(MP4, WEBM, MOV) 지원.
+              슬라이더에 표시될 이미지·영상을 URL 입력 또는 파일 업로드로
+              설정하세요. 이미지(JPG, PNG, GIF, WEBP) 및 영상(MP4, WEBM, MOV)
+              지원.
             </p>
             {content.slides.map((slide, i) => (
               <div key={slide.id} className={styles.slideCard}>
@@ -502,20 +679,17 @@ export default function AdminPage() {
                       <input
                         type="text"
                         value={slide.label}
-                        onChange={(e) => updateSlide(i, "label", e.target.value)}
+                        onChange={(e) =>
+                          updateSlide(i, "label", e.target.value)
+                        }
                       />
                     </div>
+                    {/*
                     <div className={styles.field}>
                       <label>미디어 타입</label>
-                      <select
-                        value={slide.mediaType || "image"}
-                        onChange={(e) => updateSlide(i, "mediaType", e.target.value)}
-                        style={{ background: "#1a1a1e", border: "1px solid #2e2e35", borderRadius: 8, padding: "10px 12px", fontSize: 14, color: "#e8e6e1", outline: "none" }}
-                      >
-                        <option value="image">이미지 / GIF</option>
-                        <option value="video">영상</option>
-                      </select>
+                      <span style={{ fontSize: 14, color: "#e8e6e1" }}>이미지 / GIF</span>
                     </div>
+                    */}
                   </div>
                   <div className={styles.field}>
                     <label>URL</label>
@@ -523,7 +697,9 @@ export default function AdminPage() {
                       type="text"
                       placeholder="https://example.com/media.mp4"
                       value={slide.imageUrl}
-                      onChange={(e) => updateSlide(i, "imageUrl", e.target.value)}
+                      onChange={(e) =>
+                        updateSlide(i, "imageUrl", e.target.value)
+                      }
                     />
                   </div>
                   <div className={styles.uploadRow}>
@@ -532,20 +708,25 @@ export default function AdminPage() {
                       📁 파일 업로드
                       <input
                         type="file"
-                        accept="image/*,video/mp4,video/webm,video/quicktime"
+                        accept="image/*"
                         style={{ display: "none" }}
                         onChange={(e) => {
-                          if (e.target.files?.[0]) handleSlideUpload(i, e.target.files[0]);
+                          if (e.target.files?.[0])
+                            handleSlideUpload(i, e.target.files[0]);
                         }}
                       />
                     </label>
                   </div>
                   {slide.imageUrl && (
                     <div className={styles.preview}>
-                      {(slide.mediaType === "video") ? (
+                      {slide.mediaType === "video" ? (
                         <video
                           src={slide.imageUrl}
-                          style={{ width: "100%", height: 160, objectFit: "cover" }}
+                          style={{
+                            width: "100%",
+                            height: 160,
+                            objectFit: "cover",
+                          }}
                           muted
                           playsInline
                           controls
@@ -568,7 +749,9 @@ export default function AdminPage() {
                 )}
               </div>
             ))}
-            <button className={styles.addBtn} onClick={addSlide}>+ 슬라이드 추가</button>
+            <button className={styles.addBtn} onClick={addSlide}>
+              + 슬라이드 추가
+            </button>
           </div>
         )}
 
@@ -581,7 +764,9 @@ export default function AdminPage() {
                 <input
                   type="text"
                   value={content.schedule.vol}
-                  onChange={(e) => updateField("schedule", "vol", e.target.value)}
+                  onChange={(e) =>
+                    updateField("schedule", "vol", e.target.value)
+                  }
                 />
               </div>
               <div className={styles.field}>
@@ -590,7 +775,9 @@ export default function AdminPage() {
                   type="date"
                   value={content.schedule.date || ""}
                   min={getTodayStr()}
-                  onChange={(e) => updateField("schedule", "date", e.target.value)}
+                  onChange={(e) =>
+                    updateField("schedule", "date", e.target.value)
+                  }
                 />
               </div>
             </div>
@@ -606,7 +793,9 @@ export default function AdminPage() {
               <input
                 type="text"
                 value={content.schedule.location}
-                onChange={(e) => updateField("schedule", "location", e.target.value)}
+                onChange={(e) =>
+                  updateField("schedule", "location", e.target.value)
+                }
               />
             </div>
             <div className={styles.field}>
@@ -614,7 +803,9 @@ export default function AdminPage() {
               <input
                 type="text"
                 value={content.schedule.time}
-                onChange={(e) => updateField("schedule", "time", e.target.value)}
+                onChange={(e) =>
+                  updateField("schedule", "time", e.target.value)
+                }
               />
             </div>
           </div>
@@ -643,7 +834,9 @@ export default function AdminPage() {
                       <input
                         type="text"
                         value={prize.count}
-                        onChange={(e) => updatePrize(i, "count", e.target.value)}
+                        onChange={(e) =>
+                          updatePrize(i, "count", e.target.value)
+                        }
                       />
                     </div>
                   </div>
@@ -657,12 +850,18 @@ export default function AdminPage() {
                     />
                   </div>
                 </div>
-                <button className={styles.deleteBtn} onClick={() => removePrize(i)} title="삭제">
+                <button
+                  className={styles.deleteBtn}
+                  onClick={() => removePrize(i)}
+                  title="삭제"
+                >
                   ✕
                 </button>
               </div>
             ))}
-            <button className={styles.addBtn} onClick={addPrize}>+ 경품 추가</button>
+            <button className={styles.addBtn} onClick={addPrize}>
+              + 경품 추가
+            </button>
 
             <div className={styles.divider} />
 
@@ -672,7 +871,12 @@ export default function AdminPage() {
                 type="text"
                 placeholder="https://example.com/prize.jpg"
                 value={content.prizeImageUrl}
-                onChange={(e) => setContent((prev) => ({ ...prev, prizeImageUrl: e.target.value }))}
+                onChange={(e) =>
+                  setContent((prev) => ({
+                    ...prev,
+                    prizeImageUrl: e.target.value,
+                  }))
+                }
               />
               <div className={styles.uploadRow}>
                 <span className={styles.uploadOr}>또는</span>
@@ -683,7 +887,8 @@ export default function AdminPage() {
                     accept="image/*"
                     style={{ display: "none" }}
                     onChange={(e) => {
-                      if (e.target.files?.[0]) handlePrizeImageUpload(e.target.files[0]);
+                      if (e.target.files?.[0])
+                        handlePrizeImageUpload(e.target.files[0]);
                     }}
                   />
                 </label>
@@ -705,7 +910,9 @@ export default function AdminPage() {
               <textarea
                 rows={2}
                 value={content.seller.headline}
-                onChange={(e) => updateField("seller", "headline", e.target.value)}
+                onChange={(e) =>
+                  updateField("seller", "headline", e.target.value)
+                }
               />
               <span className={styles.hint}>줄바꿈(Enter) 사용 가능</span>
             </div>
@@ -714,7 +921,9 @@ export default function AdminPage() {
               <textarea
                 rows={3}
                 value={content.seller.description}
-                onChange={(e) => updateField("seller", "description", e.target.value)}
+                onChange={(e) =>
+                  updateField("seller", "description", e.target.value)
+                }
               />
             </div>
             <div className={styles.field}>
@@ -723,9 +932,13 @@ export default function AdminPage() {
                 type="text"
                 placeholder="https://pf.kakao.com/..."
                 value={content.seller.kakaoUrl}
-                onChange={(e) => updateField("seller", "kakaoUrl", e.target.value)}
+                onChange={(e) =>
+                  updateField("seller", "kakaoUrl", e.target.value)
+                }
               />
-              <span className={styles.hint}>셀러 신청 버튼 클릭 시 이동할 카카오톡 채널 주소</span>
+              <span className={styles.hint}>
+                셀러 신청 버튼 클릭 시 이동할 카카오톡 채널 주소
+              </span>
             </div>
 
             <div className={styles.divider} />
@@ -733,7 +946,9 @@ export default function AdminPage() {
             <div className={styles.noticeSection}>
               <div className={styles.noticeSectionHeader}>
                 <span className={styles.noticeTitle}>유의 사항 목록</span>
-                <button className={styles.addBtn} onClick={addNotice}>+ 항목 추가</button>
+                <button className={styles.addBtn} onClick={addNotice}>
+                  + 항목 추가
+                </button>
               </div>
               {(content.seller.notices || []).map((notice, i) => (
                 <div key={i} className={styles.noticeRow}>
@@ -745,7 +960,11 @@ export default function AdminPage() {
                     onChange={(e) => updateNotice(i, e.target.value)}
                     placeholder="유의 사항 내용"
                   />
-                  <button className={styles.deleteBtn} onClick={() => removeNotice(i)} title="삭제">
+                  <button
+                    className={styles.deleteBtn}
+                    onClick={() => removeNotice(i)}
+                    title="삭제"
+                  >
                     ✕
                   </button>
                 </div>
@@ -759,21 +978,29 @@ export default function AdminPage() {
             {/* 일시 중지 토글 */}
             <div className={styles.boardToggleRow}>
               <div>
-                <div className={styles.boardToggleLabel}>게시판 작성 일시 중지</div>
+                <div className={styles.boardToggleLabel}>
+                  게시판 작성 일시 중지
+                </div>
                 <div className={styles.boardToggleDesc}>
                   활성화하면 모든 사용자의 글 및 댓글 작성이 차단됩니다.
                 </div>
               </div>
               <button
                 className={`${styles.toggle} ${content.boardPaused ? styles.toggleOn : ""}`}
-                onClick={() => setContent((prev) => ({ ...prev, boardPaused: !prev.boardPaused }))}
+                onClick={() =>
+                  setContent((prev) => ({
+                    ...prev,
+                    boardPaused: !prev.boardPaused,
+                  }))
+                }
               >
                 <span className={styles.toggleKnob} />
               </button>
             </div>
             {content.boardPaused && (
               <p className={styles.boardPausedBadge}>
-                현재 게시판 작성이 중지된 상태입니다. 변경사항 저장 버튼을 눌러야 적용됩니다.
+                현재 게시판 작성이 중지된 상태입니다. 변경사항 저장 버튼을
+                눌러야 적용됩니다.
               </p>
             )}
 
@@ -782,7 +1009,11 @@ export default function AdminPage() {
             {/* 게시글 목록 */}
             <div className={styles.noticeSectionHeader}>
               <span className={styles.noticeTitle}>게시글 관리</span>
-              <button className={styles.addBtn} onClick={loadBoardPosts} style={{ width: "auto" }}>
+              <button
+                className={styles.addBtn}
+                onClick={loadBoardPosts}
+                style={{ width: "auto" }}
+              >
                 {boardLoading ? "불러오는 중..." : "게시글 불러오기"}
               </button>
             </div>
@@ -794,16 +1025,24 @@ export default function AdminPage() {
                     <div
                       className={`${styles.boardRow} ${post.hidden ? styles.boardRowHidden : ""} ${selectedPost?.id === post.id ? styles.boardRowSelected : ""}`}
                     >
-                      <div className={styles.boardRowInfo} onClick={() => handleSelectPost(post)}>
+                      <div
+                        className={styles.boardRowInfo}
+                        onClick={() => handleSelectPost(post)}
+                      >
                         <span className={styles.boardRowId}>#{post.id}</span>
-                        <span className={styles.boardRowTitle}>{post.title}</span>
+                        <span className={styles.boardRowTitle}>
+                          {post.title}
+                        </span>
                         <span className={styles.boardRowMeta}>
-                          {post.author} · {post.created_at?.slice(0, 10)} · 댓글 {post.comment_count}
+                          {post.author} · {post.created_at?.slice(0, 10)} · 댓글{" "}
+                          {post.comment_count}
                         </span>
                       </div>
                       <button
                         className={`${styles.boardHideBtn} ${post.hidden ? styles.boardHideBtnActive : ""}`}
-                        onClick={() => toggleHidden("post", post.id, post.hidden)}
+                        onClick={() =>
+                          toggleHidden("post", post.id, post.hidden)
+                        }
                       >
                         {post.hidden ? "숨김 해제" : "숨기기"}
                       </button>
@@ -813,9 +1052,13 @@ export default function AdminPage() {
                     {selectedPost?.id === post.id && (
                       <div className={styles.boardComments}>
                         {commentsLoading ? (
-                          <p className={styles.boardCommentsEmpty}>댓글 불러오는 중...</p>
+                          <p className={styles.boardCommentsEmpty}>
+                            댓글 불러오는 중...
+                          </p>
                         ) : postComments.length === 0 ? (
-                          <p className={styles.boardCommentsEmpty}>댓글이 없습니다.</p>
+                          <p className={styles.boardCommentsEmpty}>
+                            댓글이 없습니다.
+                          </p>
                         ) : (
                           postComments.map((c) => (
                             <div
@@ -823,14 +1066,26 @@ export default function AdminPage() {
                               className={`${styles.boardCommentRow} ${c.hidden ? styles.boardRowHidden : ""}`}
                             >
                               <div className={styles.boardCommentInfo}>
-                                {c.parent_id && <span className={styles.boardReplyBadge}>답글</span>}
-                                <span className={styles.boardCommentAuthor}>{c.author}</span>
-                                <span className={styles.boardCommentContent}>{c.content}</span>
-                                <span className={styles.boardRowMeta}>{c.created_at?.slice(0, 10)}</span>
+                                {c.parent_id && (
+                                  <span className={styles.boardReplyBadge}>
+                                    답글
+                                  </span>
+                                )}
+                                <span className={styles.boardCommentAuthor}>
+                                  {c.author}
+                                </span>
+                                <span className={styles.boardCommentContent}>
+                                  {c.content}
+                                </span>
+                                <span className={styles.boardRowMeta}>
+                                  {c.created_at?.slice(0, 10)}
+                                </span>
                               </div>
                               <button
                                 className={`${styles.boardHideBtn} ${c.hidden ? styles.boardHideBtnActive : ""}`}
-                                onClick={() => toggleHidden("comment", c.id, c.hidden)}
+                                onClick={() =>
+                                  toggleHidden("comment", c.id, c.hidden)
+                                }
                               >
                                 {c.hidden ? "숨김 해제" : "숨기기"}
                               </button>

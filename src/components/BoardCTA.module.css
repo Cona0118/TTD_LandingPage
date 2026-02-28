@@ -153,6 +153,7 @@
   }
   .visualSide {
     padding: 36px 24px;
+    order: 2;
   }
   .postList {
     max-width: 100%;
@@ -167,6 +168,7 @@
     font-size: 12px;
   }
   .textSide {
+    order: 1;
     padding: 40px 24px;
   }
   .desc {

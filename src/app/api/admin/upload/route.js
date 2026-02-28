@@ -42,15 +42,13 @@ export async function POST(request) {
 
     const ext = file.name.split(".").pop().toLowerCase();
     const imageExts = ["jpg", "jpeg", "png", "gif", "webp"];
-    const videoExts = ["mp4", "webm", "mov"];
-    const allowed = [...imageExts, ...videoExts];
-    if (!allowed.includes(ext)) {
+    if (!imageExts.includes(ext)) {
       return Response.json(
-        { success: false, message: "jpg, png, gif, webp, mp4, webm, mov 파일만 업로드 가능합니다." },
+        { success: false, message: "jpg, png, gif, webp 파일만 업로드 가능합니다." },
         { status: 400 }
       );
     }
-    const mediaType = videoExts.includes(ext) ? "video" : "image";
+    const mediaType = "image";
 
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
