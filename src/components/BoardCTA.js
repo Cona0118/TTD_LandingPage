@@ -50,7 +50,7 @@ export default function BoardCTA() {
           <h2>게시판을{"\n"}구경해보세요</h2>
           <p className={styles.desc}>
             게시판에서 자신의 판매 상품을 홍보하고{"\n"}
-            다른 사람과 후기를 나누세요!
+            다른 사람과 후기를 나누세요!!!
           </p>
           <Link href="/board" className={styles.boardBtn}>
             게시판 바로가기
