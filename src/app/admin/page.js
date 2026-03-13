@@ -103,12 +103,12 @@ function getTodayStr() {
 }
 
 /* ── 파일 업로드 헬퍼 (브라우저 → Supabase 직접 업로드) ── */
-async function uploadFile(file) {
+async function uploadFile(file, customName) {
   // 1단계: 서버에서 서명된 업로드 URL 발급
   const prepRes = await fetch("/api/admin/upload", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ fileName: file.name }),
+    body: JSON.stringify({ fileName: file.name, customName }),
   });
   const prepData = await prepRes.json();
   if (!prepData.success) return prepData;
@@ -414,7 +414,9 @@ export default function AdminPage() {
   /* ── 미디어 업로드 핸들러 ── */
   async function handleSlideUpload(index, file, field = "imageUrl") {
     showToast("업로드 중...");
-    const data = await uploadFile(file);
+    const num = String(index + 1).padStart(2, "0");
+    const suffix = field === "mobileUrl" ? "mobile" : "pc";
+    const data = await uploadFile(file, `slide-${num}-${suffix}`);
     if (data.success) {
       updateSlide(index, field, data.url);
       if (field === "imageUrl")
@@ -427,7 +429,9 @@ export default function AdminPage() {
 
   async function handlePrizeImageUpload(file) {
     showToast("업로드 중...");
-    const data = await uploadFile(file);
+    const today = new Date();
+    const dateStr = `${today.getFullYear()}${String(today.getMonth() + 1).padStart(2, "0")}${String(today.getDate()).padStart(2, "0")}`;
+    const data = await uploadFile(file, `price_${dateStr}`);
     if (data.success) {
       setContent((prev) => ({ ...prev, prizeImageUrl: data.url }));
       showToast("이미지 업로드 완료!");
@@ -662,7 +666,7 @@ export default function AdminPage() {
                     onChange={async (e) => {
                       if (e.target.files?.[0]) {
                         showToast("업로드 중...");
-                        const data = await uploadFile(e.target.files[0]);
+                        const data = await uploadFile(e.target.files[0], "og-image");
                         if (data.success) {
                           setContent((prev) => ({ ...prev, ogImageUrl: data.url }));
                           showToast("업로드 완료!");

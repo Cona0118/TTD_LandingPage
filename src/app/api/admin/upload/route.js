@@ -87,7 +87,7 @@ export async function POST(request) {
   }
 
   try {
-    const { fileName } = await request.json();
+    const { fileName, customName } = await request.json();
 
     if (!fileName) {
       return Response.json({ success: false, message: "파일명이 없습니다." }, { status: 400 });
@@ -103,7 +103,14 @@ export async function POST(request) {
 
     const mediaType = VIDEO_EXTS.includes(ext) ? "video" : "image";
     const contentType = MIME_MAP[ext];
-    const filePath = `admin/${Date.now()}-${crypto.randomBytes(4).toString("hex")}.${ext}`;
+    const filePath = customName
+      ? `admin/${customName}.${ext}`
+      : `admin/${Date.now()}-${crypto.randomBytes(4).toString("hex")}.${ext}`;
+
+    // customName이 있으면 기존 파일 덮어쓰기 (upsert)
+    if (customName) {
+      await supabase.storage.from("images").remove([filePath]);
+    }
 
     const { data: signedData, error: signError } = await supabase.storage
       .from("images")
