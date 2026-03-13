@@ -636,6 +636,54 @@ export default function AdminPage() {
             <div className={styles.divider} />
 
             <div className={styles.field}>
+              <label>OG 메타 이미지 (SNS 공유 시 표시)</label>
+              <span className={styles.hint}>
+                권장 크기: 1200×630px · SNS에서 링크 공유 시 미리보기로 표시됩니다
+              </span>
+              <textarea
+                rows={2}
+                placeholder="https://example.com/og-image.jpg"
+                value={content.ogImageUrl ?? ""}
+                onChange={(e) =>
+                  setContent((prev) => ({
+                    ...prev,
+                    ogImageUrl: e.target.value,
+                  }))
+                }
+              />
+              <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 6 }}>
+                <span className={styles.uploadOr}>또는</span>
+                <label className={styles.uploadBtn}>
+                  📁 파일 업로드
+                  <input
+                    type="file"
+                    accept="image/*"
+                    style={{ display: "none" }}
+                    onChange={async (e) => {
+                      if (e.target.files?.[0]) {
+                        showToast("업로드 중...");
+                        const data = await uploadFile(e.target.files[0]);
+                        if (data.success) {
+                          setContent((prev) => ({ ...prev, ogImageUrl: data.url }));
+                          showToast("업로드 완료!");
+                        } else {
+                          showToast(data.message || "업로드 실패");
+                        }
+                      }
+                    }}
+                  />
+                </label>
+              </div>
+              {content.ogImageUrl && (
+                <div className={styles.preview} style={{ marginTop: 10 }}>
+                  <img src={content.ogImageUrl} alt="OG 미리보기" />
+                </div>
+              )}
+            </div>
+
+            <div className={styles.divider} />
+
+            <div className={styles.field}>
               <label>카카오톡 채널 URL</label>
               <textarea
                 rows={4}

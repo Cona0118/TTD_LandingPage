@@ -11,10 +11,13 @@ import Footer from "@/components/Footer";
 export const dynamic = "force-dynamic";
 
 export async function generateMetadata() {
+  const content = await getContent();
+  const ogImage = content?.ogImageUrl;
+
   return {
-    openGraph: {
-      images: [{ url: "/api/og", width: 1200, height: 630 }],
-    },
+    openGraph: ogImage
+      ? { images: [{ url: ogImage, width: 1200, height: 630 }] }
+      : undefined,
   };
 }
 
