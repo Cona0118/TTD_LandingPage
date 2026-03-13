@@ -123,9 +123,9 @@ export default function Schedule({ schedule, prizes, prizeImageUrl }) {
         <div className={styles.calDivider} />
         <div className={styles.calInfo}>
           {/* <h3>ㅌㅌㄷ 트레이너스 트레이닝 데이</h3> */}
-          <p>
+          <p style={{ whiteSpace: "pre-line" }}>
             {location}
-            <br />
+            {"\n"}
             {time}
           </p>
           <div className={styles.calBadge}>
@@ -158,7 +158,7 @@ export default function Schedule({ schedule, prizes, prizeImageUrl }) {
                     {p.name}
                   </span>
                   {hasLink && <span className={styles.prizeLinkIcon}>↗</span>}
-                  <span className={styles.prizeTag}>{p.count}</span>
+                  <span className={styles.prizeTag} style={{ whiteSpace: "pre-line" }}>{p.count}</span>
                 </>
               );
               return hasLink ? (

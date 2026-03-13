@@ -32,7 +32,7 @@ export default function Footer() {
               target="_blank"
               rel="noopener noreferrer"
             >
-              {link.name}
+              <span style={{ whiteSpace: "pre-line" }}>{link.name}</span>
             </a>
           ))}
         </div>

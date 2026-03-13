@@ -43,7 +43,7 @@ export default function IntroSection({ intro }) {
       </div>
       <div className={styles.text}>
         <h2>{parseHeadline(headline)}</h2>
-        <p>{description1}</p>
+        <p>{parseLineBreaks(description1)}</p>
         <p>{parseLineBreaks(description2)}</p>
       </div>
     </div>

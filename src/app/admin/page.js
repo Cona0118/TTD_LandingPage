@@ -594,7 +594,7 @@ export default function AdminPage() {
             <div className={styles.field}>
               <label>메인 헤드라인</label>
               <textarea
-                rows={3}
+                rows={5}
                 value={content.intro.headline}
                 onChange={(e) =>
                   updateField("intro", "headline", e.target.value)
@@ -614,7 +614,7 @@ export default function AdminPage() {
             <div className={styles.field}>
               <label>소개 텍스트 (단락 1)</label>
               <textarea
-                rows={3}
+                rows={5}
                 value={content.intro.description1}
                 onChange={(e) =>
                   updateField("intro", "description1", e.target.value)
@@ -624,7 +624,7 @@ export default function AdminPage() {
             <div className={styles.field}>
               <label>소개 텍스트 (단락 2)</label>
               <textarea
-                rows={3}
+                rows={5}
                 value={content.intro.description2}
                 onChange={(e) =>
                   updateField("intro", "description2", e.target.value)
@@ -637,8 +637,8 @@ export default function AdminPage() {
 
             <div className={styles.field}>
               <label>카카오톡 채널 URL</label>
-              <input
-                type="text"
+              <textarea
+                rows={4}
                 placeholder="https://pf.kakao.com/..."
                 value={content.navbarKakaoUrl ?? ""}
                 onChange={(e) =>
@@ -647,6 +647,7 @@ export default function AdminPage() {
                     navbarKakaoUrl: e.target.value,
                   }))
                 }
+                style={{ resize: "vertical" }}
               />
               <span className={styles.hint}>
                 헤더 &apos;카카오톡 문의&apos; 버튼 및 푸터 &apos;카카오톡
@@ -674,19 +675,20 @@ export default function AdminPage() {
               {(content.footerLinks || []).map((link, i) => (
                 <div key={link.id} className={styles.noticeRow}>
                   <span className={styles.noticeNum}>{i + 1}</span>
-                  <input
-                    type="text"
+                  <textarea
+                    rows={2}
                     className={styles.noticeInput}
-                    style={{ width: 130, flexShrink: 0 }}
+                    style={{ width: 130, flexShrink: 0, resize: "vertical" }}
                     value={link.name}
                     onChange={(e) =>
                       updateFooterLink(i, "name", e.target.value)
                     }
                     placeholder="표시 이름 (예: Instagram)"
                   />
-                  <input
-                    type="text"
+                  <textarea
+                    rows={2}
                     className={styles.noticeInput}
+                    style={{ resize: "vertical" }}
                     value={link.url}
                     onChange={(e) => updateFooterLink(i, "url", e.target.value)}
                     placeholder="URL (https://...)"
@@ -721,12 +723,13 @@ export default function AdminPage() {
                   <div className={styles.row2}>
                     <div className={styles.field}>
                       <label>라벨</label>
-                      <input
-                        type="text"
+                      <textarea
+                        rows={2}
                         value={slide.label}
                         onChange={(e) =>
                           updateSlide(i, "label", e.target.value)
                         }
+                        style={{ resize: "vertical" }}
                       />
                     </div>
                     <div
@@ -765,13 +768,14 @@ export default function AdminPage() {
                   {/* PC용 */}
                   <div className={styles.field}>
                     <label>PC용 URL</label>
-                    <input
-                      type="text"
+                    <textarea
+                      rows={2}
                       placeholder="https://example.com/media.mp4"
                       value={slide.imageUrl}
                       onChange={(e) =>
                         updateSlide(i, "imageUrl", e.target.value)
                       }
+                      style={{ resize: "vertical" }}
                     />
                   </div>
                   <div className={styles.uploadRow}>
@@ -830,13 +834,14 @@ export default function AdminPage() {
                         (선택 — 비우면 PC용 이미지 사용)
                       </span>
                     </label>
-                    <input
-                      type="text"
+                    <textarea
+                      rows={2}
                       placeholder="https://example.com/mobile.jpg"
                       value={slide.mobileUrl ?? ""}
                       onChange={(e) =>
                         updateSlide(i, "mobileUrl", e.target.value)
                       }
+                      style={{ resize: "vertical" }}
                     />
                   </div>
                   <div className={styles.uploadRow}>
@@ -905,12 +910,13 @@ export default function AdminPage() {
             <div className={styles.row2}>
               <div className={styles.field}>
                 <label>회차 (vol.XX)</label>
-                <input
-                  type="text"
+                <textarea
+                  rows={2}
                   value={content.schedule.vol}
                   onChange={(e) =>
                     updateField("schedule", "vol", e.target.value)
                   }
+                  style={{ resize: "vertical" }}
                 />
               </div>
               <div className={styles.field}>
@@ -934,22 +940,24 @@ export default function AdminPage() {
             )}
             <div className={styles.field}>
               <label>장소</label>
-              <input
-                type="text"
+              <textarea
+                rows={4}
                 value={content.schedule.location}
                 onChange={(e) =>
                   updateField("schedule", "location", e.target.value)
                 }
+                style={{ resize: "vertical" }}
               />
             </div>
             <div className={styles.field}>
               <label>시간</label>
-              <input
-                type="text"
+              <textarea
+                rows={4}
                 value={content.schedule.time}
                 onChange={(e) =>
                   updateField("schedule", "time", e.target.value)
                 }
+                style={{ resize: "vertical" }}
               />
             </div>
           </div>
@@ -975,22 +983,24 @@ export default function AdminPage() {
                     </div>
                     <div className={styles.field} style={{ width: 90 }}>
                       <label>인원</label>
-                      <input
-                        type="text"
+                      <textarea
+                        rows={2}
                         value={prize.count}
                         onChange={(e) =>
                           updatePrize(i, "count", e.target.value)
                         }
+                        style={{ resize: "vertical" }}
                       />
                     </div>
                   </div>
                   <div className={styles.field}>
                     <label>링크 (선택)</label>
-                    <input
-                      type="text"
+                    <textarea
+                      rows={2}
                       placeholder="https://example.com (없으면 비워두세요)"
                       value={prize.link ?? ""}
                       onChange={(e) => updatePrize(i, "link", e.target.value)}
+                      style={{ resize: "vertical" }}
                     />
                   </div>
                 </div>
@@ -1011,8 +1021,8 @@ export default function AdminPage() {
 
             <div className={styles.field}>
               <label>경품 이미지</label>
-              <input
-                type="text"
+              <textarea
+                rows={2}
                 placeholder="https://example.com/prize.jpg"
                 value={content.prizeImageUrl}
                 onChange={(e) =>
@@ -1021,6 +1031,7 @@ export default function AdminPage() {
                     prizeImageUrl: e.target.value,
                   }))
                 }
+                style={{ resize: "vertical" }}
               />
               <div className={styles.uploadRow}>
                 <span className={styles.uploadOr}>또는</span>
@@ -1052,7 +1063,7 @@ export default function AdminPage() {
             <div className={styles.field}>
               <label>헤드라인</label>
               <textarea
-                rows={2}
+                rows={4}
                 value={content.seller.headline}
                 onChange={(e) =>
                   updateField("seller", "headline", e.target.value)
@@ -1063,7 +1074,7 @@ export default function AdminPage() {
             <div className={styles.field}>
               <label>설명 텍스트</label>
               <textarea
-                rows={3}
+                rows={5}
                 value={content.seller.description}
                 onChange={(e) =>
                   updateField("seller", "description", e.target.value)
@@ -1072,13 +1083,14 @@ export default function AdminPage() {
             </div>
             <div className={styles.field}>
               <label>카카오톡 채널 URL</label>
-              <input
-                type="text"
+              <textarea
+                rows={4}
                 placeholder="https://pf.kakao.com/..."
                 value={content.seller.kakaoUrl}
                 onChange={(e) =>
                   updateField("seller", "kakaoUrl", e.target.value)
                 }
+                style={{ resize: "vertical" }}
               />
               <span className={styles.hint}>
                 셀러 신청 버튼 클릭 시 이동할 카카오톡 채널 주소
@@ -1108,7 +1120,7 @@ export default function AdminPage() {
                     {i + 1}
                   </span>
                   <textarea
-                    rows={2}
+                    rows={4}
                     className={styles.noticeInput}
                     value={notice}
                     onChange={(e) => updateNotice(i, e.target.value)}

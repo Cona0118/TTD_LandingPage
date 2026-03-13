@@ -10,6 +10,18 @@ import Footer from "@/components/Footer";
 
 export const dynamic = "force-dynamic";
 
+export async function generateMetadata() {
+  const content = await getContent();
+  const firstSlide = content?.slides?.[0];
+  const ogImage = firstSlide?.mobileUrl || firstSlide?.imageUrl;
+
+  return {
+    openGraph: ogImage
+      ? { images: [{ url: ogImage, width: 1200, height: 630 }] }
+      : undefined,
+  };
+}
+
 export default async function Home() {
   const content = await getContent();
   if (content?.maintenanceMode) redirect("/maintenance");
