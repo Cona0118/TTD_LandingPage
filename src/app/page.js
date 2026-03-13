@@ -40,6 +40,8 @@ export default async function Home() {
         schedule={content?.schedule}
         prizes={content?.prizes}
         prizeImageUrl={content?.prizeImageUrl}
+        prizesHidden={content?.prizesHidden}
+        prizesHiddenImageUrl={content?.prizesHiddenImageUrl}
       />
 
       {/* SECTION 3 — 셀러 모집 */}

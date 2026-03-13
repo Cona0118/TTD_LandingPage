@@ -47,7 +47,7 @@ const DEFAULT_PRIZES = [
   { rank: 5, name: "경품 이름 (임시)", count: "9명" },
 ];
 
-export default function Schedule({ schedule, prizes, prizeImageUrl }) {
+export default function Schedule({ schedule, prizes, prizeImageUrl, prizesHidden, prizesHiddenImageUrl }) {
   const sectionRef = useRef(null);
   const imgAreaRef = useRef(null);
   const listRef = useRef(null);
@@ -137,60 +137,79 @@ export default function Schedule({ schedule, prizes, prizeImageUrl }) {
 
       {/* 추첨 이벤트 */}
       <div className={styles.eventRow}>
-        <div className={`${styles.eventCard} reveal`}>
-          <div className={styles.evLabel}>🎁 Lucky Draw</div>
-          <h3>ㅌㅌㄷ 추첨 이벤트</h3>
-          <p>구매 추첨, 스티커 랠리 추첨 등 도파민 뿜뿜!</p>
-          <div className={styles.prizeList} ref={listRef}>
-            {prizeList.map((p, idx) => {
-              const hasLink = !!p.link;
-              const inner = (
-                <>
-                  <div
-                    className={`${styles.prizeRank} ${idx === 0 ? styles.first : ""}`}
-                  >
-                    {p.rank}
-                  </div>
-                  <span
-                    className={styles.prizeName}
-                    style={{ whiteSpace: "pre-wrap" }}
-                  >
-                    {p.name}
-                  </span>
-                  {hasLink && <span className={styles.prizeLinkIcon}>↗</span>}
-                  <span className={styles.prizeTag} style={{ whiteSpace: "pre-line" }}>{p.count}</span>
-                </>
-              );
-              return hasLink ? (
-                <a
-                  key={p.rank ?? idx}
-                  href={p.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={`${styles.prizeItem} ${idx === 0 ? styles.firstItem : ""} ${styles.prizeItemLink}`}
-                >
-                  {inner}
-                </a>
-              ) : (
-                <div
-                  key={p.rank ?? idx}
-                  className={`${styles.prizeItem} ${idx === 0 ? styles.firstItem : ""}`}
-                >
-                  {inner}
-                </div>
-              );
-            })}
+        {prizesHidden ? (
+          <div className={`${styles.eventCard} reveal`}>
+            <div className={styles.evLabel}>🎁 Lucky Draw</div>
+            <h3>ㅌㅌㄷ 추첨 이벤트</h3>
+            <p>경품은 추후 공개됩니다. 기대해 주세요!</p>
+            {prizesHiddenImageUrl && (
+              <div className={styles.prizeImgArea}>
+                <img
+                  src={prizesHiddenImageUrl}
+                  alt="경품 추후 공개"
+                  className={styles.prizeImg}
+                />
+              </div>
+            )}
           </div>
-        </div>
+        ) : (
+          <>
+            <div className={`${styles.eventCard} reveal`}>
+              <div className={styles.evLabel}>🎁 Lucky Draw</div>
+              <h3>ㅌㅌㄷ 추첨 이벤트</h3>
+              <p>구매 추첨, 스티커 랠리 추첨 등 도파민 뿜뿜!</p>
+              <div className={styles.prizeList} ref={listRef}>
+                {prizeList.map((p, idx) => {
+                  const hasLink = !!p.link;
+                  const inner = (
+                    <>
+                      <div
+                        className={`${styles.prizeRank} ${idx === 0 ? styles.first : ""}`}
+                      >
+                        {p.rank}
+                      </div>
+                      <span
+                        className={styles.prizeName}
+                        style={{ whiteSpace: "pre-wrap" }}
+                      >
+                        {p.name}
+                      </span>
+                      {hasLink && <span className={styles.prizeLinkIcon}>↗</span>}
+                      <span className={styles.prizeTag} style={{ whiteSpace: "pre-line" }}>{p.count}</span>
+                    </>
+                  );
+                  return hasLink ? (
+                    <a
+                      key={p.rank ?? idx}
+                      href={p.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`${styles.prizeItem} ${idx === 0 ? styles.firstItem : ""} ${styles.prizeItemLink}`}
+                    >
+                      {inner}
+                    </a>
+                  ) : (
+                    <div
+                      key={p.rank ?? idx}
+                      className={`${styles.prizeItem} ${idx === 0 ? styles.firstItem : ""}`}
+                    >
+                      {inner}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
 
-        <div className={`${styles.eventCard} reveal`}>
-          <div className={styles.evLabel}>📸 Prize Preview</div>
-          <h3>이달의 경품 미리보기</h3>
-          <p>이번 달 추첨 이벤트의 경품을 확인해보세요.</p>
-          <div className={styles.prizeImgArea} ref={imgAreaRef}>
-            <img src={imgUrl} alt="이달의 경품" className={styles.prizeImg} />
-          </div>
-        </div>
+            <div className={`${styles.eventCard} reveal`}>
+              <div className={styles.evLabel}>📸 Prize Preview</div>
+              <h3>이달의 경품 미리보기</h3>
+              <p>이번 달 추첨 이벤트의 경품을 확인해보세요.</p>
+              <div className={styles.prizeImgArea} ref={imgAreaRef}>
+                <img src={imgUrl} alt="이달의 경품" className={styles.prizeImg} />
+              </div>
+            </div>
+          </>
+        )}
       </div>
     </section>
   );

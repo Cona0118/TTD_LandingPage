@@ -1018,6 +1018,111 @@ export default function AdminPage() {
         {/* ════ 추첨 경품 ════ */}
         {activeTab === "prizes" && (
           <div className={styles.section}>
+            <div
+              className={styles.boardToggleRow}
+              style={{
+                background: content.prizesHidden
+                  ? "rgba(232,83,62,0.08)"
+                  : undefined,
+                borderRadius: 10,
+                padding: "16px 20px",
+                marginBottom: 8,
+              }}
+            >
+              <div>
+                <div className={styles.boardToggleLabel}>경품 추후 공개</div>
+                <div className={styles.boardToggleDesc}>
+                  활성화하면 경품 목록 대신 안내 이미지가 표시됩니다.
+                </div>
+              </div>
+              <button
+                className={`${styles.toggle} ${content.prizesHidden ? styles.toggleOn : ""}`}
+                onClick={() =>
+                  setContent((prev) => ({
+                    ...prev,
+                    prizesHidden: !prev.prizesHidden,
+                  }))
+                }
+              >
+                <span className={styles.toggleKnob} />
+              </button>
+            </div>
+            {content.prizesHidden && (
+              <>
+                <p
+                  className={styles.boardPausedBadge}
+                  style={{
+                    background: "rgba(232,83,62,0.12)",
+                    color: "#e8533e",
+                    borderColor: "rgba(232,83,62,0.25)",
+                  }}
+                >
+                  현재 경품이 비공개 상태입니다. 변경사항 저장 버튼을 눌러야
+                  적용됩니다.
+                </p>
+                <div className={styles.field} style={{ marginTop: 12 }}>
+                  <label>추후 공개 안내 이미지</label>
+                  <textarea
+                    rows={2}
+                    placeholder="https://example.com/coming-soon.jpg"
+                    value={content.prizesHiddenImageUrl ?? ""}
+                    onChange={(e) =>
+                      setContent((prev) => ({
+                        ...prev,
+                        prizesHiddenImageUrl: e.target.value,
+                      }))
+                    }
+                  />
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 8,
+                      marginTop: 6,
+                    }}
+                  >
+                    <span className={styles.uploadOr}>또는</span>
+                    <label className={styles.uploadBtn}>
+                      📁 파일 업로드
+                      <input
+                        type="file"
+                        accept="image/*"
+                        style={{ display: "none" }}
+                        onChange={async (e) => {
+                          if (e.target.files?.[0]) {
+                            showToast("업로드 중...");
+                            const data = await uploadFile(
+                              e.target.files[0],
+                              "prizes-hidden",
+                            );
+                            if (data.success) {
+                              setContent((prev) => ({
+                                ...prev,
+                                prizesHiddenImageUrl: data.url,
+                              }));
+                              showToast("업로드 완료!");
+                            } else {
+                              showToast(data.message || "업로드 실패");
+                            }
+                          }
+                        }}
+                      />
+                    </label>
+                  </div>
+                  {content.prizesHiddenImageUrl && (
+                    <div className={styles.preview} style={{ marginTop: 10 }}>
+                      <img
+                        src={content.prizesHiddenImageUrl}
+                        alt="추후 공개 미리보기"
+                      />
+                    </div>
+                  )}
+                </div>
+              </>
+            )}
+
+            <div className={styles.divider} />
+
             {content.prizes.map((prize, i) => (
               <div key={i} className={styles.prizeRow}>
                 <div className={styles.prizeRank}>{prize.rank}등</div>
