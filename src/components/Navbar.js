@@ -26,8 +26,8 @@ export default function Navbar() {
         ㅌㅌㄷ<span>.</span>
       </a>
       <div className={styles.links}>
-        <a href="#schedule">일정</a>
-        <a href="#seller">셀러 모집</a>
+        <a href="/#schedule">일정</a>
+        <a href="/#seller">셀러 모집</a>
         <a href="/board">게시판</a>
         {kakaoUrl && (
           <a
